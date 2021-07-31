@@ -13,9 +13,10 @@ use std::fmt;
 use std::path::PathBuf;
 
 #[derive(Clone)]
+#[derive(Debug)]
 struct OriginStorageDir(PathBuf);
 
-const MAX_STORAGE_BYTES: u32 = 10 * 1024 * 1024;
+const MAX_STORAGE_BYTES: u32 = 1024 * 1024 * 1024;
 
 pub fn init(origin_storage_dir: Option<PathBuf>) -> Extension {
   Extension::builder()
@@ -24,6 +25,7 @@ pub fn init(origin_storage_dir: Option<PathBuf>) -> Extension {
       "01_webstorage.js",
     ))
     .ops(vec![
+      ("op_webstorage_location", op_sync(op_webstorage_location)),
       ("op_webstorage_length", op_sync(op_webstorage_length)),
       ("op_webstorage_key", op_sync(op_webstorage_key)),
       ("op_webstorage_set", op_sync(op_webstorage_set)),
@@ -88,6 +90,15 @@ fn get_webstorage(
   };
 
   Ok(conn)
+}
+
+pub fn op_webstorage_location(
+  state: &mut OpState,
+  location: String,
+  _: (),
+) -> Result<(), AnyError> {
+  state.put(OriginStorageDir(PathBuf::from(location.clone())));
+  return Ok(());
 }
 
 pub fn op_webstorage_length(

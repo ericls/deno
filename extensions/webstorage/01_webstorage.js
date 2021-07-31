@@ -72,6 +72,17 @@
       return core.opSync("op_webstorage_get", key, this[_persistent]);
     }
 
+    location(str) {
+      webidl.assertBranded(this, Storage);
+      const prefix = "Failed to execute 'location' on 'Storage'";
+      webidl.requiredArguments(arguments.length, 1, { prefix });
+      str = webidl.converters.DOMString(str, {
+        prefix,
+        context: "Argument 1",
+      });
+      return core.opSync("op_webstorage_location", str);
+    }
+
     removeItem(key) {
       webidl.assertBranded(this, Storage);
       const prefix = "Failed to execute 'removeItem' on 'Storage'";

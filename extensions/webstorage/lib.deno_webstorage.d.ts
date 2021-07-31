@@ -12,6 +12,10 @@ interface Storage {
    */
   readonly length: number;
   /**
+   * Sets the location of storage, needs to be called before anything else
+   */
+  location(path: string): string | null;
+  /**
    * Empties the list associated with the object of all key/value pairs, if there are any.
    */
   clear(): void;
